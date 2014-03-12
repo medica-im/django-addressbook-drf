@@ -4,8 +4,6 @@ Django-addressbook
 Features
 -----------
 
-* Allow users to register themselves via their Facebook, Twitter,
-Google, or OpenID credentials
 * Users can create contact records organized into user-defined contact groups
 * The app supports storing for each contact:
 ** Multiple physical addresses
@@ -19,7 +17,8 @@ scanner to import it
 (`http://en.gravatar.com/`)
 * Each contact uses the hCard microformat in its markup
 `http://microformats.org/wiki/hcard`
-* A full unit test suite
+* Allow users to add Facebook, Twitter, Google, or OpenID credentials
+
 * The app is installable using standard Python distutils
 
 Installing the app 
@@ -28,7 +27,7 @@ Installing the app
     git clone https://github.com/dkdndes/django-addressbook.git
     python setup.py install
 OR
-    pip install django-addressbook
+    pip install -r requirements
 
 Please, consider to use virtualenv in all cases.
 
