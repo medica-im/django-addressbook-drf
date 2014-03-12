@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Django-addressbook settings
     'django.contrib.sites',
+    'uni_form',
     'addressbook',
 )
 
