@@ -6,20 +6,14 @@ Features
 
 * Users can create contact records organized into user-defined contact groups
 * The app supports storing for each contact:
-** Multiple physical addresses
-** Multiple phone numbers
-** Multiple emails
-* Each contact record supports exporting that record in vCard
-format (`http://en.wikipedia.org/wiki/VCard`)
-* Each contact record presents a QR code to allow a barcode
-scanner to import it
-* Each contact record accesses any Gravatar for the contact
-(`http://en.gravatar.com/`)
-* Each contact uses the hCard microformat in its markup
-`http://microformats.org/wiki/hcard`
-* Allow users to add Facebook, Twitter, Google, or OpenID credentials
-
-* The app is installable using standard Python distutils
+* Multiple physical addresses
+* Multiple phone numbers
+* Multiple emails
+* Each contact record supports exporting that record in vCard format (`http://en.wikipedia.org/wiki/VCard`)
+* Each contact record presents a QR code to allow a barcode scanner to import it
+* Each contact record accesses any Gravatar for the contact (`http://en.gravatar.com/`)
+* Each contact uses the hCard microformat in its markup `http://microformats.org/wiki/hcard`
+* Allow users to add Social credentials
 
 Installing the app 
 ----------------------
