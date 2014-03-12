@@ -4,6 +4,8 @@ from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 
+#todo replace googleapi with local qrcode lib
+
 register = template.Library()
 
 @register.filter
