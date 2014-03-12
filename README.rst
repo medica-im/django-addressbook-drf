@@ -23,7 +23,7 @@ Please, consider to use virtualenv in all cases.
 NOTES
 ---------
 
-GoogleChartsApi for qrcode generation: https://developers.google.com/chart/
+GoogleChartsApi for QRCode generation: https://developers.google.com/chart/
 
 Gravatar (Hash): http://en.gravatar.com/site/implement/images/
 
