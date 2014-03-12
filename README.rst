@@ -15,8 +15,8 @@ Features
 Installing the app 
 ----------------------
 
-    git clone https://github.com/dkdndes/django-addressbook.git
-    pip install -r requirements
+* Download the branch example 
+* pip install -r requirements
 
 Please, consider to use virtualenv in all cases.
 
