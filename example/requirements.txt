@@ -1,0 +1,8 @@
+Django==1.6.2
+argparse==1.2.1
+django-addressbook==0.1.1
+django-uni-form==0.9.0
+python-dateutil==2.2
+six==1.5.2
+vobject==0.8.1c
+wsgiref==0.1.2
