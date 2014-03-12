@@ -23,6 +23,10 @@ Please, consider to use virtualenv in all cases.
 NOTES
 ---------
 
+GoogleChartsApi for qrcode generation: https://developers.google.com/chart/
+
+Gravatar (Hash): http://en.gravatar.com/site/implement/images/
+
 vCard Format: **http://www.ietf.org/rfc/rfc2426.txt**
 
 Vobject Django snippet: **http://djangosnippets.org/snippets/58/**
