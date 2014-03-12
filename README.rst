@@ -22,13 +22,15 @@ scanner to import it
 * A full unit test suite
 * The app is installable using standard Python distutils
 
-Installing the app
+Installing the app 
 ----------------------
-    clone via git and python setup.py install
-   
-OR
 
-    easy_install django-addressbook
+    git clone https://github.com/dkdndes/django-addressbook.git
+    python setup.py install
+OR
+    pip install django-addressbook
+
+Please, consider to use virtualenv in all cases.
 
 Setting up the app
 ----------------------
