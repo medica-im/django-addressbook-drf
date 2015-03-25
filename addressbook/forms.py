@@ -1,10 +1,11 @@
 from django.forms import ModelForm
 from django_localflavor_us.forms import USZipCodeField
 from django.forms.formsets import BaseFormSet, formset_factory
-from django.forms.models import inlineformset_factory, BaseInlineFormSet 
+from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.forms import ValidationError
 
 from addressbook.models import *
+
 
 class RequiredFormSet(BaseFormSet):
     def __init__(self, *args, **kwargs):
@@ -12,10 +13,12 @@ class RequiredFormSet(BaseFormSet):
         for form in self.forms:
             form.empty_permitted = False
 
+
 class ContactGroupForm(ModelForm):
     class Meta:
         model = ContactGroup
         fields = ('name',)
+
 
 class ContactForm(ModelForm):
     def __init__(self, *pa, **ka):
@@ -26,38 +29,51 @@ class ContactForm(ModelForm):
     class Meta:
         model = Contact
 
+
 class SocialNetworkForm(ModelForm):
     class Meta:
         model = SocialNetwork
         fields = ('handle', 'type', 'public_visible', 'contact_visible')
+
 
 class WebsiteForm(ModelForm):
     class Meta:
         model = Website
         fields = ('website', 'type', 'public_visible', 'contact_visible')
 
+
 class EmailForm(ModelForm):
     class Meta:
         model = Email
         fields = ('email', 'type', 'public_visible', 'contact_visible')
+
 
 class PhoneForm(ModelForm):
     class Meta:
         model = PhoneNumber
         fields = ('phone', 'type', 'public_visible', 'contact_visible')
 
+
 class AddressForm(ModelForm):
     zip = USZipCodeField()
-    
+
     class Meta:
         model = Address
-        fields = ('street','city','state','zip', 'type', 'public_visible', 'contact_visible')
+        fields = (
+            'street',
+            'city',
+            'state',
+            'zip',
+            'type',
+            'public_visible',
+            'contact_visible'
+        )
 
 
 class MandatoryInlineFormSet(BaseInlineFormSet):
     def is_valid(self):
-        return super(MandatoryInlineFormSet, self).is_valid() and \
-                    not any([bool(e) for e in self.errors])  
+        any_errors = any([bool(e) for e in self.errors])
+        return super(MandatoryInlineFormSet, self).is_valid() and not any_errors
 
     def clean(self):
         count = 0
@@ -78,10 +94,9 @@ EmailFormSet = formset_factory(EmailForm, max_num=3, formset=RequiredFormSet)
 WebsiteFormSet = formset_factory(WebsiteForm, max_num=3, formset=RequiredFormSet)
 SocialNetworkFormSet = formset_factory(SocialNetworkForm, max_num=3, formset=RequiredFormSet)
 
-ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete = False)
+ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete=False)
 EmailEditFormSet = inlineformset_factory(Contact, Email, extra=1, formset=MandatoryInlineFormSet)
 PhoneEditFormSet = inlineformset_factory(Contact, PhoneNumber, extra=1, can_delete=True)
 AddressEditFormSet = inlineformset_factory(Contact, Address, extra=1, formset=MandatoryInlineFormSet)
 WebsiteEditFormSet = inlineformset_factory(Contact, Website, extra=1, can_delete=True)
 SocialNetworkEditFormSet = inlineformset_factory(Contact, SocialNetwork, extra=1, can_delete=True)
-
