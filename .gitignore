@@ -4,3 +4,6 @@ dist
 /.project
 /.pydevproject
 /.settings
+*.swp
+*.pyc
+#migrations/

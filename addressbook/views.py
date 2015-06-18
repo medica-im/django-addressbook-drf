@@ -156,7 +156,8 @@ def single_contact(request, pk):
                 'hash': email_hash,
                 'addresses': addresses,
                 'phones': phones,
-                'vcard_str': str(VCard(contact)),
+                'vcard_str': None,
+                #'vcard_str': str(VCard(contact)),
             }))
 
     elif request.method == "POST":

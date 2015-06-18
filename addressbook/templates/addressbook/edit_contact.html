@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% load uni_form_tags %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/uni-form.css" type="text/css" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}uni_form/default.uni-form.css" type="text/css" />
-<link rel="stylesheet" href="{{ MEDIA_URL }}css/addressbook.css" type="text/css" />
-    <script src="{{ MEDIA_URL }}uni_form/uni-form.jquery.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="{% static 'crispy_forms/uni-form.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'crispy_forms/default.uni-form.css' %}" type="text/css" />
+<link rel="stylesheet" href="{% static 'css/addressbook.css' %}" type="text/css" />
+    <script src="{% static 'crispy_forms/uni-form.jquery.js' %}" type="text/javascript"></script>
     <script>
     $(document).ready(function() {
       // Code adapted from http://djangosnippets.org/snippets/1389/
@@ -123,26 +124,26 @@
 <form action="" method="post" class="uniForm">{% csrf_token %}
     <fieldset class="inlineLabels">
         <div class="dark">Contact Information</div>
-        {{ contact_form|as_uni_form }}
+        {{ contact_form|crispy }}
         <div class="dark">Email(s) <a class="add sm" href="#">Add another email</a></div>
         {{ email_formset.management_form }}
         {% for form in email_formset.forms %}
         <div class="{{email_formset.prefix}}{% if not forloop.last %} dot{% endif %}">
-          {{ form|as_uni_form }}
+          {{ form|crispy }}
         </div>
         {% endfor %}
         <div class="dark">Phone Number(s) <a class="add sm" href="#">Add another phone number</a></div>
         {{ phone_formset.management_form }}
         {% for form in phone_formset.forms %}
         <div class="{{phone_formset.prefix}}{% if not forloop.last %} dot{% endif %}">
-          {{ form|as_uni_form }}
+          {{ form|crispy }}
         </div>
         {% endfor %}
         <div class="dark">Address(es) <a class="add sm" href="#">Add another address</a></div>
         {{ address_formset.management_form }}
         {% for form in address_formset.forms %}
         <div class="{{ address_formset.prefix }}{% if not forloop.last %} dot{% endif %}">
-          {{ form|as_uni_form }}
+          {{ form|crispy }}
         </div>
         {% endfor %}
 

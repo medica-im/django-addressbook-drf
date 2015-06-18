@@ -27,6 +27,7 @@ class ContactForm(ModelForm):
         self.fields['group'].queryset = ContactGroup.objects.filter(user=user)
 
     class Meta:
+        fields = '__all__'
         model = Contact
 
 
@@ -55,7 +56,7 @@ class PhoneForm(ModelForm):
 
 
 class AddressForm(ModelForm):
-    zip = USZipCodeField()
+    #zip = USZipCodeField()
 
     class Meta:
         model = Address
@@ -94,9 +95,9 @@ EmailFormSet = formset_factory(EmailForm, max_num=3, formset=RequiredFormSet)
 WebsiteFormSet = formset_factory(WebsiteForm, max_num=3, formset=RequiredFormSet)
 SocialNetworkFormSet = formset_factory(SocialNetworkForm, max_num=3, formset=RequiredFormSet)
 
-ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete=False)
-EmailEditFormSet = inlineformset_factory(Contact, Email, extra=1, formset=MandatoryInlineFormSet)
-PhoneEditFormSet = inlineformset_factory(Contact, PhoneNumber, extra=1, can_delete=True)
-AddressEditFormSet = inlineformset_factory(Contact, Address, extra=1, formset=MandatoryInlineFormSet)
-WebsiteEditFormSet = inlineformset_factory(Contact, Website, extra=1, can_delete=True)
-SocialNetworkEditFormSet = inlineformset_factory(Contact, SocialNetwork, extra=1, can_delete=True)
+ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete=False, fields="__all__")
+EmailEditFormSet = inlineformset_factory(Contact, Email, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
+PhoneEditFormSet = inlineformset_factory(Contact, PhoneNumber, extra=1, can_delete=True, fields="__all__")
+AddressEditFormSet = inlineformset_factory(Contact, Address, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
+WebsiteEditFormSet = inlineformset_factory(Contact, Website, extra=1, can_delete=True, fields="__all__")
+SocialNetworkEditFormSet = inlineformset_factory(Contact, SocialNetwork, extra=1, can_delete=True, fields="__all__")
