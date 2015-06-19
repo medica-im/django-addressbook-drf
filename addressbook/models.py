@@ -1,10 +1,10 @@
 from django.conf import settings
-from django_localflavor_us.models import USStateField
-# PhoneNumberField
 from django.core.files.storage import get_storage_class
 from django.db import models
 from django.utils.functional import LazyObject
+
 from easy_thumbnails.fields import ThumbnailerImageField
+from django_countries.fields import CountryField
 
 
 class AvatarStorage(LazyObject):
@@ -21,6 +21,7 @@ ADR_TYPES = (
 
 TEL_TYPES = (
     ('Mobile', 'Mobile'),
+    ('Mobile Work', 'Mobile Work'),
     ('Work', 'Work'),
     ('Fax', 'Fax'),
     ('Skype', 'Skype'),
@@ -56,18 +57,18 @@ social_net_prefixes = dict(
 
 
 class ContactGroup(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    name = models.CharField(max_length="40", verbose_name='Group Name')
+    #user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    name = models.CharField(max_length="40", verbose_name='Group Name', unique=True)
 
-    class Meta:
-        unique_together = ('user', 'name')
+    #class Meta:
+    #    unique_together = ('user', 'name')
 
     def __unicode__(self):
         return self.name
 
 
 class Contact(models.Model):
-    group = models.ForeignKey(ContactGroup)
+    groups = models.ManyToManyField(ContactGroup)
     last_name = models.CharField(max_length="40", blank=False)
     first_name = models.CharField(max_length="40", blank=False)
     middle_name = models.CharField(max_length="40", blank=True)
@@ -90,21 +91,23 @@ class Contact(models.Model):
 
 class Address(models.Model):
     contact = models.ForeignKey(Contact)
-    street = models.CharField(max_length="50")
+    street = models.CharField(max_length="50", null=True, blank=True)
     city = models.CharField(max_length="40")
-    state = USStateField(null=True, blank=True)
+    state = models.CharField(max_length="40")
+    country = CountryField()
     zip = models.CharField(max_length="10", null=True, blank=True)
     type = models.CharField(max_length="20", choices=ADR_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s %s: %s %s, %s' % (
+        return '%s %s: %s %s, %s, %s' % (
             self.contact.first_name,
             self.contact.last_name,
             self.street,
             self.city,
-            self.state
+            self.state,
+            self.country
         )
 
 

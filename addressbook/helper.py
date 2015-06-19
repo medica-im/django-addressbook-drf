@@ -48,7 +48,9 @@ class VCard(object):
         addresses = Address.objects.filter(contact=contact)
         for address in addresses:
             a = card.add('adr')
-            a.value = vobject.vcard.Address(street=address.street, city=address.city, region= address.state, code = address.zip, country = "United States" )
+            a.value = vobject.vcard.Address(street=address.street,
+city=address.city, region=address.state, code=address.zip,
+country=(address.country.name, ) )
             a.type_param = address.type
 
     def add_emails(self):

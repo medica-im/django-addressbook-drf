@@ -10,10 +10,10 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires = [
+        'django-countries',
         'vobject',
-        'django-uni-form',
+        'crispy-forms',
         'easy-thumbnails',
-        'django-localflavor-us',
     ],
     url='https://github.com/iiilx/addressbook',
     license='BSD license, see LICENSE.txt',

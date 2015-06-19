@@ -1,32 +1,41 @@
 from django.contrib import admin
 from addressbook.models import *
 
+class SocialInline(admin.TabularInline):
+    model = SocialNetwork
+    extra = 0
+
+class WebsiteInline(admin.TabularInline):
+    model = Website
+    extra = 0
+
+class PhoneInline(admin.TabularInline):
+    model = PhoneNumber
+    extra = 0
+
+class EmailInline(admin.TabularInline):
+    model = Email
+    extra = 0
+
+class AddressInline(admin.StackedInline):
+    model = Address
+    extra = 0
+
 class ContactAdmin(admin.ModelAdmin):
-    pass
+    inlines = [
+        AddressInline,
+        EmailInline,
+        PhoneInline,
+        SocialInline,
+        WebsiteInline,
+    ]
 
-class ContactGroupAdmin(admin.ModelAdmin):
-    pass
-
-class AddressAdmin(admin.ModelAdmin):
-    pass
-
-class EmailAdmin(admin.ModelAdmin):
-    pass
-
-class PhoneNumberAdmin(admin.ModelAdmin):
-    pass
-
-class WebsiteAdmin(admin.ModelAdmin):
-    pass
-
-class SocialNetworkAdmin(admin.ModelAdmin):
-    pass
 
 admin.site.register(Contact, ContactAdmin)
-admin.site.register(ContactGroup, ContactGroupAdmin)
-admin.site.register(Address, AddressAdmin)
-admin.site.register(Email, EmailAdmin)
-admin.site.register(PhoneNumber, PhoneNumberAdmin)
-admin.site.register(Website, WebsiteAdmin)
-admin.site.register(SocialNetwork, SocialNetworkAdmin)
 
+admin.site.register(ContactGroup, admin.ModelAdmin)
+admin.site.register(PhoneNumber, admin.ModelAdmin)
+admin.site.register(Website, admin.ModelAdmin)
+admin.site.register(SocialNetwork, admin.ModelAdmin)
+admin.site.register(Email, admin.ModelAdmin)
+admin.site.register(Address, admin.ModelAdmin)

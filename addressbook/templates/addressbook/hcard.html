@@ -25,8 +25,8 @@
         <br />        
         <span class="locality">{{ address.city }}</span>,
         <span class="region">{{ address.state }}</span>
-        <span class="postal-code">{{ address.zip }}</span>
-        <span class="country-name">United States</span>
+        <!-- <span class="postal-code">{{ address.zip }}</span> -->
+        <span class="country-name">{{ address.country }}</span>
     </div>
     
     {% endfor %}

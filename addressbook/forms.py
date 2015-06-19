@@ -1,5 +1,4 @@
 from django.forms import ModelForm
-from django_localflavor_us.forms import USZipCodeField
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.models import inlineformset_factory, BaseInlineFormSet
 from django.forms import ValidationError
@@ -24,7 +23,7 @@ class ContactForm(ModelForm):
     def __init__(self, *pa, **ka):
         user = ka.pop('user')
         super(ContactForm, self).__init__(*pa, **ka)
-        self.fields['group'].queryset = ContactGroup.objects.filter(user=user)
+        #self.fields['group'].queryset = ContactGroup.objects.filter(user=user)
 
     class Meta:
         fields = '__all__'
@@ -95,7 +94,8 @@ EmailFormSet = formset_factory(EmailForm, max_num=3, formset=RequiredFormSet)
 WebsiteFormSet = formset_factory(WebsiteForm, max_num=3, formset=RequiredFormSet)
 SocialNetworkFormSet = formset_factory(SocialNetworkForm, max_num=3, formset=RequiredFormSet)
 
-ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete=False, fields="__all__")
+#ContactFormSet = inlineformset_factory(ContactGroup, Contact, max_num=4, extra=1, can_delete=False, fields="__all__")
+ContactFormSet = formset_factory(ContactForm, max_num=4, formset=RequiredFormSet)
 EmailEditFormSet = inlineformset_factory(Contact, Email, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
 PhoneEditFormSet = inlineformset_factory(Contact, PhoneNumber, extra=1, can_delete=True, fields="__all__")
 AddressEditFormSet = inlineformset_factory(Contact, Address, extra=1, formset=MandatoryInlineFormSet, fields="__all__")

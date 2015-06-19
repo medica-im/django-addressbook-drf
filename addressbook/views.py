@@ -73,8 +73,8 @@ def add_contact(request):
 @login_required
 def edit_contact(request, pk):
     contact = Contact.objects.get(pk=pk)
-    if contact.group.user != request.user:
-        return HttpResponse(contact.group.user.username + request.user.username)
+    #if contact.group.user != request.user:
+    #    return HttpResponse(contact.group.user.username + request.user.username)
         #raise Http404
     if request.method == "POST":
         contact_form = ContactForm(request.POST, instance=contact, user=request.user)
@@ -110,10 +110,12 @@ def edit_contact(request, pk):
 
 @login_required
 def index(request):
-    groups = ContactGroup.objects.filter(user=request.user)
-    contacts = Contact.objects.filter(group__user=request.user)
+    #groups = ContactGroup.objects.filter(user=request.user)
+    #contacts = Contact.objects.filter(group__user=request.user)
+    groups = ContactGroup.objects.all()
+    contacts = Contact.objects.all()
     tup = [
-        (group.name, Contact.objects.filter(group=group).order_by('last_name', 'first_name')) for group in groups
+        (group.name, Contact.objects.filter(groups=group).order_by('last_name', 'first_name')) for group in groups
     ]
     return render(
         request, 'addressbook/index.html',
@@ -133,8 +135,8 @@ def get_hash(str):
 @login_required
 def single_contact(request, pk):
     contact = Contact.objects.get(pk=pk)
-    if contact.group.user != request.user:
-        raise Http404
+    #if contact.group.user != request.user:
+    #    raise Http404
 
     if request.method == "GET":
         emails = Email.objects.filter(contact=contact)
@@ -176,6 +178,6 @@ def download_vcard(request, vcard=VCard):
     contact = Contact.objects.get(pk=pk)
     output = vcard(contact).output_string()
     filename = "contact_%s%s.vcf" % (contact.first_name, contact.last_name)
-    response = HttpResponse(output, mimetype="text/x-vCard")
+    response = HttpResponse(output, content_type="text/x-vCard")
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     return response
