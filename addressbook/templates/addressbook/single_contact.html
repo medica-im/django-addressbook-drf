@@ -1,38 +1,43 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-
 {% load qrcode %}
-
-{% block extrahead %}
-<link rel="stylesheet" href="{% static 'css/addressbook.css' %}" type="text/css" />
-{% endblock %}
 
 {% block content %}
 {% include "addressbook/links.html" %}
 
-<div class="wrapper">
+<div class="col-sm-4">
+    <div class="panel panel-success"></div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ contact.first_name }} {{ contact.last_name }}</h3>
+        </div>
+        <div class="panel-body">
+	{% include "addressbook/hcard.html" %}
+        </div>
+    </div>
 
-{% include "addressbook/hcard.html" %}
-
-<div class="qr">
-{{ vcard_str|qrcode }}
-<a class="dlink" href="{% url "addressbook_download_vcard" %}?id={{ contact.id }}">Download V-card</a> 
 </div>
+<!-- /.col-sm-4 -->
 
-<br clear="all" />
-<div style="margin-top:10px;">
-<p>Groups: {% for group in contact.groups.all %}{{ group }}, {% endfor %}<p>
-{{ contact.blurb }}
-</div>
+	<div class="qr">
+	{{ vcard_str|qrcode }}
+	<a class="dlink" href="{% url "addressbook_download_vcard" %}?id={{ contact.id }}">Download V-card</a> 
+	</div>
+	<div style="margin-top:10px;">
+	<p>Groups: 
+	{% for group in contact.groups.all %}
+		<a href="{% url "addressbook_single_group" group.name %}">{{ group.name }}</a>,
+	{% endfor %}
+	<p>
+	{% if contact.blurb %}
+	{{ contact.blurb }}
+	{% endif %}
 
 
-<br clear="all" />
-<div style="margin-top:10px;">
-<button class="inline" onclick="window.location = '{% url "addressbook_edit_contact" contact.id %}';">Edit Contact</button>
 <form action="" method="post" class="inline"> {% csrf_token %}
-<input type="submit" value="Delete Contact">
+<button class="btn btn-primary" onclick="window.location = '{% url "addressbook_edit_contact" contact.id %}';">Edit Contact</button>
+<input class="btn btn-danger" type="submit" value="Delete Contact">
 </form>
-</div>
 
 </div>
 

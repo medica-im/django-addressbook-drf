@@ -13,6 +13,7 @@ from helper import VCard
 
 @login_required
 def add_group(request):
+
     if request.method == "GET":
         form = ContactGroupForm()
     else:
@@ -53,7 +54,7 @@ def add_contact(request):
             # request.user.message_set.create(message = 'Successfully saved contact.')
             return HttpResponseRedirect(reverse('addressbook_index'))  # Redirect to a 'success' page
     else:
-        groups = ContactGroup.objects.filter(user=request.user)
+        groups = ContactGroup.objects.all()
         if not groups:
             return HttpResponseRedirect(reverse('addressbook_add_group'))
         contact_form = ContactForm(user=request.user)
@@ -115,13 +116,14 @@ def index(request):
     groups = ContactGroup.objects.all()
     contacts = Contact.objects.all()
     tup = [
-        (group.name, Contact.objects.filter(groups=group).order_by('last_name', 'first_name')) for group in groups
+        (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
     ]
     return render(
         request, 'addressbook/index.html',
         RequestContext(request, {
             'tup': tup,
-            'contacts': contacts
+            'contacts': contacts,
+            'groups': groups,
         }))
 
 
@@ -167,6 +169,22 @@ def single_contact(request, pk):
         return HttpResponseRedirect(reverse('addressbook_index'))
     else:
         raise Http404
+
+@login_required
+def single_group(request, name):
+    groups = ContactGroup.objects.filter(name=name)
+    contacts = Contact.objects.filter(groups__name=name)
+    tup = [
+        (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
+    ]
+    return render(
+        request, 'addressbook/index.html',
+        RequestContext(request, {
+            'tup': tup,
+            'contacts': contacts,
+            'groups': ContactGroup.objects.all(),
+        }))
+
 
 
 @login_required

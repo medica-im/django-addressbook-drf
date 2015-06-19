@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block extrahead %}
-<link rel="stylesheet" href="{% static 'css/addressbook.css' %}" type="text/css" />
-{% endblock %}
-
 {% block content %}
 
 {% include "addressbook/links.html" %}
@@ -16,24 +12,22 @@
 {% endfor %}
 </div>
 {% endif %}
-<div class="wrapper">
-
+<table class="table table-striped">
+<tbody>
 {% if contacts %}
-
 {% for cat, contacts in tup %}
-    <div class="dark"><b>{{cat}}</b></div>
-    <div class="body">
+    <tr class="active"><th>{{cat}}</th></tr>
     {% if contacts %}
         {% for contact in contacts %}
-        <p><a href="{% url "addressbook_single_contact" contact.id %}">{{ contact.first_name }} {{ contact.last_name }}</a></p>
+        <tr><td><a href="{% url "addressbook_single_contact" contact.id %}">{{ contact.first_name }} {{ contact.last_name }}</a></td></tr>
         {% endfor %}
     {% else %}
         <p>None</p>
     {% endif %}
-    </div>
 {% endfor %}
 {% else %}
 No contacts
 {% endif %}
-</div>
+</tbody>
+</table>
 {% endblock %}

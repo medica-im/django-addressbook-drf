@@ -60,8 +60,9 @@ class ContactGroup(models.Model):
     #user = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length="40", verbose_name='Group Name', unique=True)
 
-    #class Meta:
-    #    unique_together = ('user', 'name')
+    class Meta:
+        ordering = ['name']
+        #unique_together = ('user', 'name')
 
     def __unicode__(self):
         return self.name
@@ -79,6 +80,9 @@ class Contact(models.Model):
     profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
     twitter_handle = models.CharField(max_length="50", blank=True, null=True)
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
     def __init__(self, *args, **kwargs):
         super(Contact, self).__init__(*args, **kwargs)
