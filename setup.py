@@ -12,7 +12,7 @@ setup(
     install_requires = [
         'django-countries',
         'vobject',
-        'crispy-forms',
+        'django-crispy-forms-ng',
         'easy-thumbnails',
     ],
     url='https://github.com/iiilx/addressbook',
