@@ -81,7 +81,7 @@ class Contact(models.Model):
     profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
     twitter_handle = models.CharField(max_length="50", blank=True, null=True)
-    worked_with = models.ManyToManyField('self', blank=True, null=True)
+    worked_with = models.ManyToManyField('self')
     tags = TaggableManager()
 
     class Meta:
