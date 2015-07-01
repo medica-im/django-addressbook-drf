@@ -13,6 +13,7 @@ setup(
         'django-countries',
         'vobject',
         'django-crispy-forms-ng',
+	'django-taggit',
         'easy-thumbnails',
     ],
     url='https://github.com/iiilx/addressbook',

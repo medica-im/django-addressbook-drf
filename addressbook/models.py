@@ -5,6 +5,7 @@ from django.utils.functional import LazyObject
 
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_countries.fields import CountryField
+from taggit.managers import TaggableManager
 
 
 class AvatarStorage(LazyObject):
@@ -80,6 +81,8 @@ class Contact(models.Model):
     profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
     twitter_handle = models.CharField(max_length="50", blank=True, null=True)
+    worked_with = models.ManyToManyField('self', blank=True, null=True)
+    tags = TaggableManager()
 
     class Meta:
         ordering = ['first_name', 'last_name']
