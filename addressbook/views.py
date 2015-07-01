@@ -165,7 +165,8 @@ def single_contact(request, pk):
             }))
 
     elif request.method == "POST":
-        contact.delete()
+        #FIXME: allow delete?
+	#contact.delete()
         return HttpResponseRedirect(reverse('addressbook_index'))
     else:
         raise Http404
