@@ -139,6 +139,8 @@ def get_hash(str):
 
 @login_required
 def single_contact(request, pk):
+    groups = ContactGroup.objects.all()
+    tags = Tag.objects.all()
     contact = Contact.objects.get(pk=pk)
     #if contact.group.user != request.user:
     #    raise Http404
@@ -165,6 +167,8 @@ def single_contact(request, pk):
                 'phones': phones,
                 'vcard_str': None,
                 #'vcard_str': str(VCard(contact)),
+                'groups': groups,
+                'tags': tags,
             }))
 
     elif request.method == "POST":
