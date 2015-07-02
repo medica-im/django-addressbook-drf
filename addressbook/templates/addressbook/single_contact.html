@@ -24,11 +24,18 @@
 	<a class="dlink" href="{% url "addressbook_download_vcard" %}?id={{ contact.id }}">Download V-card</a> 
 	</div>
 	<div style="margin-top:10px;">
-	<p>Groups: 
+	<p>
 	{% for group in contact.groups.all %}
+		{% if forloop.first %}Groups:{% endif %}
 		<a href="{% url "addressbook_single_group" group.name %}">{{ group.name }}</a>,
 	{% endfor %}
+	</p>
 	<p>
+	{% for tag in contact.tags.all %}
+		{% if forloop.first %}Tags:{% endif %}
+		<a href="{% url "addressbook_single_tag" tag.name %}">{{ tag.name }}</a>,
+	{% endfor %}
+	</p>
 	{% if contact.blurb %}
 	{{ contact.blurb }}
 	{% endif %}

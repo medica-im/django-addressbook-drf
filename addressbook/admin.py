@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django import forms
+from taggit_labels.widgets import LabelWidget
+from taggit.forms import TagField
 from addressbook.models import *
 
 class SocialInline(admin.TabularInline):
@@ -21,7 +24,14 @@ class AddressInline(admin.StackedInline):
     model = Address
     extra = 0
 
+
+
+#class ContactForm(forms.ModelForm):
+#    tags = TagField(required=False, widget=LabelWidget)
+
 class ContactAdmin(admin.ModelAdmin):
+    #form = ContactForm
+
     inlines = [
         AddressInline,
         EmailInline,
@@ -29,7 +39,6 @@ class ContactAdmin(admin.ModelAdmin):
         SocialInline,
         WebsiteInline,
     ]
-
 
 admin.site.register(Contact, ContactAdmin)
 

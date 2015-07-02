@@ -9,5 +9,6 @@ urlpatterns = patterns(
     url(r'^contact/(?P<pk>\d+)/edit$', 'edit_contact', name='addressbook_edit_contact'),
     url(r'^contact/(?P<pk>\d+)/view$', 'single_contact', name='addressbook_single_contact'),
     url(r'^group/(?P<name>[\w ]+)/view$', 'single_group', name='addressbook_single_group'),
+    url(r'^tag/(?P<name>[\w ]+)/view$', 'single_tag', name='addressbook_single_tag'),
     url(r'^contact/download$', 'download_vcard', name='addressbook_download_vcard'),
 )

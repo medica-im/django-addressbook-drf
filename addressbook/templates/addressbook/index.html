@@ -14,20 +14,22 @@
 {% endif %}
 <table class="table table-striped">
 <tbody>
-{% if contacts %}
-{% for cat, contacts in tup %}
-    <tr class="active"><th>{{cat}}</th></tr>
-    {% if contacts %}
-        {% for contact in contacts %}
-        <tr><td><a href="{% url "addressbook_single_contact" contact.id %}">{{ contact.first_name }} {{ contact.last_name }}</a></td></tr>
-        {% endfor %}
-    {% else %}
-        <p>None</p>
-    {% endif %}
-{% endfor %}
-{% else %}
+{% for contact in contacts %}
+    <tr><td><a href="{% url "addressbook_single_contact" contact.id %}">{{ contact.first_name }} {{ contact.last_name }}</a><br/>
+    <small><em>
+    {% for group in contact.groups.all %}
+        {% if forloop.first %}Groups:{% endif %}
+        <a href="{% url "addressbook_single_group" group.name %}">{{ group.name }}</a>,
+    {% endfor %}
+    {% for tag in contact.tags.all %}
+        {% if forloop.first %}Tags:{% endif %}
+        <a href="{% url "addressbook_single_tag" tag.name %}">{{ tag.name }}</a>,
+    {% endfor %}
+    </em></small>
+    </td></tr>
+{% empty %}
 No contacts
-{% endif %}
+{% endfor %}
 </tbody>
 </table>
 {% endblock %}

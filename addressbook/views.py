@@ -6,6 +6,8 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context import RequestContext
 
+from taggit.models import Tag
+
 from addressbook.forms import *
 from addressbook.models import *
 from helper import VCard
@@ -17,7 +19,7 @@ def add_group(request):
     if request.method == "GET":
         form = ContactGroupForm()
     else:
-        group = ContactGroup(user=request.user)
+        group = ContactGroup()
         form = ContactGroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
@@ -111,10 +113,10 @@ def edit_contact(request, pk):
 
 @login_required
 def index(request):
-    #groups = ContactGroup.objects.filter(user=request.user)
-    #contacts = Contact.objects.filter(group__user=request.user)
     groups = ContactGroup.objects.all()
+    tags = Tag.objects.all()
     contacts = Contact.objects.all()
+    # FIXME: tup?
     tup = [
         (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
     ]
@@ -124,6 +126,7 @@ def index(request):
             'tup': tup,
             'contacts': contacts,
             'groups': groups,
+            'tags': tags,
         }))
 
 
@@ -174,6 +177,7 @@ def single_contact(request, pk):
 @login_required
 def single_group(request, name):
     groups = ContactGroup.objects.filter(name=name)
+    tags = Tag.objects.all()
     contacts = Contact.objects.filter(groups__name=name)
     tup = [
         (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
@@ -184,6 +188,26 @@ def single_group(request, name):
             'tup': tup,
             'contacts': contacts,
             'groups': ContactGroup.objects.all(),
+            'tags': tags,
+        }))
+
+
+@login_required
+def single_tag(request, name):
+    #FIXME: no groups! tags!
+    groups = ContactGroup.objects.all()
+    tags = Tag.objects.filter(name=name)
+    contacts = Contact.objects.filter(tags__name=name)
+    tup = [
+        (tag.name, Contact.objects.filter(tags=tag).order_by('first_name', 'last_name')) for tag in tags
+    ]
+    return render(
+        request, 'addressbook/index.html',
+        RequestContext(request, {
+            'tup': tup,
+            'contacts': contacts,
+            'groups': ContactGroup.objects.all(),
+            'tags': Tag.objects.all(),
         }))
 
 

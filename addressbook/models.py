@@ -81,8 +81,8 @@ class Contact(models.Model):
     profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
     twitter_handle = models.CharField(max_length="50", blank=True, null=True)
-    worked_with = models.ManyToManyField('self')
-    tags = TaggableManager()
+    worked_with = models.ManyToManyField('self', blank=True)
+    tags = TaggableManager(blank=True,)
 
     class Meta:
         ordering = ['first_name', 'last_name']
@@ -120,7 +120,7 @@ class Address(models.Model):
 
 class PhoneNumber(models.Model):
     contact = models.ForeignKey(Contact)
-    phone = models.CharField(max_length="20")
+    phone = models.CharField(max_length="200")
     type = models.CharField(max_length="20", choices=TEL_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
