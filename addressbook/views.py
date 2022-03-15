@@ -1,7 +1,7 @@
 import hashlib
 
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context import RequestContext
@@ -10,7 +10,7 @@ from taggit.models import Tag
 
 from addressbook.forms import *
 from addressbook.models import *
-from helper import VCard
+from addressbook.helper import VCard
 
 
 @login_required
@@ -24,12 +24,12 @@ def add_group(request):
         if form.is_valid():
             form.save()
             # request.user.message_set.create(message = 'Successfully saved group.')
-            return HttpResponseRedirect(reverse('addressbook_index'))
+            return HttpResponseRedirect(reverse('addressbook:index'))
     return render(
-        request, 'addressbook/add_group.html',
-        RequestContext(request, {'form': form})
+        request,
+        'addressbook/add_group.html',
+        context = {'form': form}
     )
-
 
 @login_required
 def add_contact(request):
@@ -54,24 +54,25 @@ def add_contact(request):
                 address.contact = contact
                 address.save()
             # request.user.message_set.create(message = 'Successfully saved contact.')
-            return HttpResponseRedirect(reverse('addressbook_index'))  # Redirect to a 'success' page
+            return HttpResponseRedirect(reverse('addressbook:index'))  # Redirect to a 'success' page
     else:
         groups = ContactGroup.objects.all()
         if not groups:
-            return HttpResponseRedirect(reverse('addressbook_add_group'))
+            return HttpResponseRedirect(reverse('addressbook:add_group'))
         contact_form = ContactForm(user=request.user)
         email_formset = EmailFormSet(prefix="email")
         phone_formset = PhoneFormSet(prefix="phone")
         address_formset = AddressFormSet(prefix="address")
     return render(
-        request, 'addressbook/add_contact.html',
-        RequestContext(request, {
+        request,
+        'addressbook/add_contact.html',
+        context = {
             'phone_formset': phone_formset,
             'contact_form': contact_form,
             'email_formset': email_formset,
             'address_formset': address_formset,
-        }))
-
+        }
+    )
 
 @login_required
 def edit_contact(request, pk):
@@ -94,22 +95,23 @@ def edit_contact(request, pk):
             email_formset.save()
             address_formset.save()
             phone_formset.save()
-            return HttpResponseRedirect(reverse('addressbook_index'))
+            return HttpResponseRedirect(reverse('addressbook:index'))
     else:
         contact_form = ContactForm(instance=contact, user=request.user)
         phone_formset = PhoneEditFormSet(instance=contact, prefix="phone")
         address_formset = AddressEditFormSet(instance=contact, prefix="address")
         email_formset = EmailEditFormSet(instance=contact, prefix="email")
     return render(
-        request, 'addressbook/edit_contact.html',
-        RequestContext(request, {
+        request,
+        'addressbook/edit_contact.html',
+        context = {
             'email_formset': email_formset,
             'phone_formset': phone_formset,
             'address_formset': address_formset,
             'contact_form': contact_form,
             'contact': contact,
-        }))
-
+        }
+    )
 
 @login_required
 def index(request):
@@ -121,21 +123,21 @@ def index(request):
         (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
     ]
     return render(
-        request, 'addressbook/index.html',
-        RequestContext(request, {
+        request,
+        'addressbook/index.html',
+        context = {
             'tup': tup,
             'contacts': contacts,
             'groups': groups,
             'tags': tags,
-        }))
-
+        }
+    )
 
 def get_hash(str):
     str = str.lower().strip()
     md5 = hashlib.md5()
     md5.update(str)
     return md5.hexdigest()
-
 
 @login_required
 def single_contact(request, pk):
@@ -158,8 +160,9 @@ def single_contact(request, pk):
         #    address = addresses[0]
         phones = PhoneNumber.objects.filter(contact=contact)
         return render(
-            request, 'addressbook/single_contact.html',
-            RequestContext(request, {
+            request,
+            'addressbook/single_contact.html',
+            context = {
                 'contact': contact,
                 'emails': emails,
                 'hash': email_hash,
@@ -169,12 +172,13 @@ def single_contact(request, pk):
                 #'vcard_str': str(VCard(contact)),
                 'groups': groups,
                 'tags': tags,
-            }))
+            }
+        )
 
     elif request.method == "POST":
         #FIXME: allow delete?
 	#contact.delete()
-        return HttpResponseRedirect(reverse('addressbook_index'))
+        return HttpResponseRedirect(reverse('addressbook:index'))
     else:
         raise Http404
 
@@ -187,14 +191,15 @@ def single_group(request, name):
         (group.name, Contact.objects.filter(groups=group).order_by('first_name', 'last_name')) for group in groups
     ]
     return render(
-        request, 'addressbook/index.html',
-        RequestContext(request, {
+        request,
+        'addressbook/index.html',
+        context = {
             'tup': tup,
             'contacts': contacts,
             'groups': ContactGroup.objects.all(),
             'tags': tags,
-        }))
-
+        }
+    )
 
 @login_required
 def single_tag(request, name):
@@ -206,15 +211,15 @@ def single_tag(request, name):
         (tag.name, Contact.objects.filter(tags=tag).order_by('first_name', 'last_name')) for tag in tags
     ]
     return render(
-        request, 'addressbook/index.html',
-        RequestContext(request, {
+        request,
+        'addressbook/index.html',
+        context = {
             'tup': tup,
             'contacts': contacts,
             'groups': ContactGroup.objects.all(),
             'tags': Tag.objects.all(),
-        }))
-
-
+        }
+    )
 
 @login_required
 def download_vcard(request, vcard=VCard):

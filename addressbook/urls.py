@@ -1,14 +1,49 @@
 #from django.conf.urls.defaults import *
 from django.conf.urls import *
+from django.urls import include, path
+from addressbook import views
 
-urlpatterns = patterns(
-    'addressbook.views',
-    url(r'^$', 'index', name='addressbook_index'),
-    url(r'^group/add$', 'add_group', name='addressbook_add_group'),
-    url(r'^contact/add$', 'add_contact', name='addressbook_add_contact'),
-    url(r'^contact/(?P<pk>\d+)/edit$', 'edit_contact', name='addressbook_edit_contact'),
-    url(r'^contact/(?P<pk>\d+)/view$', 'single_contact', name='addressbook_single_contact'),
-    url(r'^group/(?P<name>[\w ]+)/view$', 'single_group', name='addressbook_single_group'),
-    url(r'^tag/(?P<name>[\w ]+)/view$', 'single_tag', name='addressbook_single_tag'),
-    url(r'^contact/download$', 'download_vcard', name='addressbook_download_vcard'),
-)
+app_name = 'addressbook'
+
+urlpatterns = [
+    path(
+        '',
+        views.index,
+        name='index'
+    ),
+    path(
+        'group/add/',
+        views.add_group,
+        name='add_group'
+    ),
+    path(
+        'contact/add/',
+        views.add_contact,
+        name='add_contact'
+    ),
+    path(
+        'contact/<pk>/edit/',
+        views.edit_contact,
+        name='edit_contact'
+    ),
+    path(
+        'contact/<pk>/view/',
+        views.single_contact,
+        name='single_contact'
+    ),
+    path(
+        'group/<name>/view/',
+        views.single_group,
+        name='single_group'
+    ),
+    path(
+        'tag/<name>/view/',
+        views.single_tag,
+        name='single_tag'
+    ),
+    path(
+        'contact/download/',
+        views.download_vcard,
+        name='download_vcard'
+    ),
+]

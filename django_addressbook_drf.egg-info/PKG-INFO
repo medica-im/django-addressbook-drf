@@ -1,3 +1,29 @@
+Metadata-Version: 2.1
+Name: django-addressbook-drf
+Version: 0.1.4
+Summary: A Django app that allows users to create contact groups and contacts, as well as views for displaying a contact in hcard format, downloading a vcard for the contact, a gravatar, and a QR code.
+Home-page: https://github.com/medica-im/django-addressbook
+Author: Ben Lee, Jérôme Pinguet
+Author-email: yourname@example.com
+License: BSD License
+Platform: UNKNOWN
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 4.0
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Requires-Python: >=3.8
+License-File: LICENSE.txt
+
 Django-addressbook
 --------------------
 
@@ -51,3 +77,5 @@ vCard Format: **http://www.ietf.org/rfc/rfc2426.txt**
 Vobject Django snippet: **http://djangosnippets.org/snippets/58/**
 
 Vobject usage: **http://vobject.skyhouseconsulting.com/usage.html, http://lists.brotherharris.com/pipermail/vobject/2009-January/000165.html**
+
+

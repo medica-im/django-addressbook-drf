@@ -59,28 +59,28 @@ social_net_prefixes = dict(
 
 class ContactGroup(models.Model):
     #user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    name = models.CharField(max_length="40", verbose_name='Group Name', unique=True)
+    name = models.CharField(max_length=255, verbose_name='Group Name', unique=True)
 
     class Meta:
         ordering = ['name']
         #unique_together = ('user', 'name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class Contact(models.Model):
     groups = models.ManyToManyField(ContactGroup)
-    last_name = models.CharField(max_length="40", blank=False)
-    first_name = models.CharField(max_length="40", blank=False)
-    middle_name = models.CharField(max_length="40", blank=True)
-    title = models.CharField(max_length="40", blank=True)
-    organization = models.CharField(max_length="50", blank=True)
+    last_name = models.CharField(max_length=255, blank=False)
+    first_name = models.CharField(max_length=255, blank=False)
+    middle_name = models.CharField(max_length=255, blank=True)
+    title = models.CharField(max_length=255, blank=True)
+    organization = models.CharField(max_length=255, blank=True)
     url = models.URLField(blank=True)
     blurb = models.TextField(null=True, blank=True)
     profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
-    twitter_handle = models.CharField(max_length="50", blank=True, null=True)
+    twitter_handle = models.CharField(max_length=15, blank=True, null=True)
     worked_with = models.ManyToManyField('self', blank=True)
     tags = TaggableManager(blank=True,)
 
@@ -92,22 +92,22 @@ class Contact(models.Model):
         self.profile_image.storage = avatar_storage
         self.profile_image.thumbnail_storage = avatar_storage
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s" % (self.first_name, self.last_name)
 
 
 class Address(models.Model):
-    contact = models.ForeignKey(Contact)
-    street = models.CharField(max_length="50", null=True, blank=True)
-    city = models.CharField(max_length="40")
-    state = models.CharField(max_length="40")
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    street = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
     country = CountryField()
-    zip = models.CharField(max_length="10", null=True, blank=True)
-    type = models.CharField(max_length="20", choices=ADR_TYPES)
+    zip = models.CharField(max_length=255, null=True, blank=True)
+    type = models.CharField(max_length=255, choices=ADR_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s: %s %s, %s, %s' % (
             self.contact.first_name,
             self.contact.last_name,
@@ -119,42 +119,50 @@ class Address(models.Model):
 
 
 class PhoneNumber(models.Model):
-    contact = models.ForeignKey(Contact)
-    phone = models.CharField(max_length="200")
-    type = models.CharField(max_length="20", choices=TEL_TYPES)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, choices=TEL_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return "%s %s: %s" % (self.contact.first_name, self.contact.last_name, self.phone)
+    def __str__(self):
+        return "%s %s: %s" % (
+            self.contact.first_name,
+            self.contact.last_name,
+            self.phone
+        )
 
 
 class Email(models.Model):
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     email = models.EmailField()
-    type = models.CharField(max_length="20", choices=EMAIL_TYPES)
+    type = models.CharField(max_length=255, choices=EMAIL_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return "%s %s: %s" % (self.contact.first_name, self.contact.last_name, self.email)
+    def __str__(self):
+        return "%s %s: %s" % (
+            self.contact.first_name,
+            self.contact.last_name,
+            self.email
+        )
 
 
 class Website(models.Model):
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     website = models.URLField(blank=True)
-    type = models.CharField(max_length="20", choices=WEBSITE_TYPES)
+    type = models.CharField(max_length=255, choices=WEBSITE_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s: %s" % (self.contact.first_name, self.type, self.website)
 
 
 class SocialNetwork(models.Model):
-    contact = models.ForeignKey(Contact)
-    handle = models.CharField(max_length="50")
-    type = models.CharField(max_length="20", choices=SOCNET_TYPES)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    handle = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, choices=SOCNET_TYPES)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
@@ -164,5 +172,5 @@ class SocialNetwork(models.Model):
         prefix = getattr(settings, '%s_PREFIX' % self.type.upper(), prefixes[self.type])
         return '%s%s' % (prefix, self.handle)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s: %s" % (self.contact.first_name, self.type, self.handle)

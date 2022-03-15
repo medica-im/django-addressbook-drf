@@ -1,0 +1,7 @@
+django-countries
+vobject
+django-crispy-forms-ng
+django-taggit
+easy-thumbnails
+django-taggit
+django-taggit-labels
