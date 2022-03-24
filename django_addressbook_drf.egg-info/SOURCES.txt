@@ -13,6 +13,10 @@ addressbook/tests.py
 addressbook/urls.py
 addressbook/views.py
 addressbook/migrations/0001_initial.py
+addressbook/migrations/0002_alter_address_state_alter_email_type_and_more.py
+addressbook/migrations/0003_address_latitude_address_longitude.py
+addressbook/migrations/0004_address_zoom_alter_address_latitude_and_more.py
+addressbook/migrations/0005_contact_user.py
 addressbook/migrations/__init__.py
 addressbook/static/css/addressbook.css
 addressbook/templates/addressbook/add_contact.html

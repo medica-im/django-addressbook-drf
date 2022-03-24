@@ -2,6 +2,8 @@ from django.conf import settings
 from django.core.files.storage import get_storage_class
 from django.db import models
 from django.utils.functional import LazyObject
+from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_countries.fields import CountryField
@@ -10,50 +12,21 @@ from taggit.managers import TaggableManager
 
 class AvatarStorage(LazyObject):
     def _setup(self):
-        AVATAR_FILE_STORAGE = getattr(settings, 'AVATAR_FILE_STORAGE', settings.DEFAULT_FILE_STORAGE)
+        AVATAR_FILE_STORAGE = getattr(
+            settings,
+            'AVATAR_FILE_STORAGE',
+            settings.DEFAULT_FILE_STORAGE
+        )
         self._wrapped = get_storage_class(AVATAR_FILE_STORAGE)()
 
 avatar_storage = AvatarStorage()
 
-ADR_TYPES = (
-    ('Home', 'Home'),
-    ('Work', 'Work'),
-)
-
-TEL_TYPES = (
-    ('Mobile', 'Mobile'),
-    ('Mobile Work', 'Mobile Work'),
-    ('Work', 'Work'),
-    ('Fax', 'Fax'),
-    ('Skype', 'Skype'),
-)
-
-EMAIL_TYPES = (
-    ('Home', 'Home'),
-    ('Work', 'Work'),
-)
-
-WEBSITE_TYPES = (
-    ('Work', 'Work'),
-    ('Personal', 'Personal'),
-    ('Portfolio', 'Portfolio'),
-    ('Blog', 'Blog'),
-)
-
-SOCNET_TYPES = (
-    ('Skype', 'Skype'),
-    ('Twitter', 'Twitter'),
-    ('LinkedIn', 'LinkedIn'),
-    ('Facebook', 'Facebook'),
-    ('Pinterest', 'Pinterest'),
-)
-
 social_net_prefixes = dict(
     Skype='skype:',
     Twitter='https://twitter.com/',
-    LinkedIn='http://linkedin.com/',
-    Facebook='http://www.facebook.com/',
-    Pinterest='http://www.pinterest.com/',
+    LinkedIn='https://linkedin.com/',
+    Facebook='https://www.facebook.com/',
+    Pinterest='https://www.pinterest.com/',
 )
 
 
@@ -70,6 +43,12 @@ class ContactGroup(models.Model):
 
 
 class Contact(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     groups = models.ManyToManyField(ContactGroup)
     last_name = models.CharField(max_length=255, blank=False)
     first_name = models.CharField(max_length=255, blank=False)
@@ -78,7 +57,11 @@ class Contact(models.Model):
     organization = models.CharField(max_length=255, blank=True)
     url = models.URLField(blank=True)
     blurb = models.TextField(null=True, blank=True)
-    profile_image = ThumbnailerImageField(upload_to="profile_images/", blank=True, null=True)
+    profile_image = ThumbnailerImageField(
+        upload_to="profile_images/",
+        blank=True,
+        null=True
+    )
     qr_image = models.ImageField(upload_to="qr_images/", blank=True, null=True)
     twitter_handle = models.CharField(max_length=15, blank=True, null=True)
     worked_with = models.ManyToManyField('self', blank=True)
@@ -97,15 +80,40 @@ class Contact(models.Model):
 
 
 class Address(models.Model):
+
+    class AddressType(models.TextChoices):
+        HOME = 'Home', _('Home')
+        WORK = 'Work', _('Work')
+
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     street = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255)
+    state = models.CharField(max_length=255, null=True, blank=True)
     country = CountryField()
     zip = models.CharField(max_length=255, null=True, blank=True)
-    type = models.CharField(max_length=255, choices=ADR_TYPES)
+    type = models.CharField(max_length=255, choices=AddressType.choices)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
+    latitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=7,
+        null=True,
+        blank=True,
+    )
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        null=True,
+        blank=True,
+    )
+    zoom = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(21)
+        ]
+    )
 
     def __str__(self):
         return '%s %s: %s %s, %s, %s' % (
@@ -119,9 +127,18 @@ class Address(models.Model):
 
 
 class PhoneNumber(models.Model):
+    
+    class TelephoneType(models.TextChoices):
+        MOBILE = 'M', _('Mobile')
+        MOBILE_WORK = 'MW', _('Mobile Work')
+        WORK = 'W', _('Work')
+        FAX = 'F', _('Fax')
+        SKYPE = 'S', _('Skype')
+        ANSWERING_SERVICE = 'AS', _('Answering service')
+
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     phone = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, choices=TEL_TYPES)
+    type = models.CharField(max_length=255, choices=TelephoneType.choices)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
@@ -134,9 +151,14 @@ class PhoneNumber(models.Model):
 
 
 class Email(models.Model):
+    
+    class EmailType(models.TextChoices):
+        PERSONAL = 'P', _('Personal')
+        WORK = 'W', _('Work')
+
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     email = models.EmailField()
-    type = models.CharField(max_length=255, choices=EMAIL_TYPES)
+    type = models.CharField(max_length=255, choices=EmailType.choices)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
@@ -149,9 +171,16 @@ class Email(models.Model):
 
 
 class Website(models.Model):
+    
+    class WebsiteType(models.TextChoices):
+        WORK = 'W', _('Work')
+        PERSONAL = 'PE', _('Personal')
+        PORTFOLIO = 'PO', _('Portfolio')
+        BLOG = 'Blog', _('Blog')
+
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     website = models.URLField(blank=True)
-    type = models.CharField(max_length=255, choices=WEBSITE_TYPES)
+    type = models.CharField(max_length=255, choices=WebsiteType.choices)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 
@@ -160,9 +189,17 @@ class Website(models.Model):
 
 
 class SocialNetwork(models.Model):
+    
+    class SocialNetworkType(models.TextChoices):
+        SKYPE = 'S', 'Skype'
+        TWITTER = 'T', 'Twitter'
+        LINKEDIN = 'LI', 'LinkedIn'
+        FACEBOOK = 'F', 'Facebook'
+        PINTEREST = 'P', 'Pinterest'
+
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     handle = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, choices=SOCNET_TYPES)
+    type = models.CharField(max_length=255, choices=SocialNetworkType.choices)
     public_visible = models.BooleanField(default=False)
     contact_visible = models.BooleanField(default=False)
 

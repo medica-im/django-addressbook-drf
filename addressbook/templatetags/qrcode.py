@@ -22,7 +22,7 @@ def qrcode(value, alt=None):
     """
     url = conditional_escape(
         "http://chart.apis.google.com/chart?%s" %
-        urllib.urlencode({
+        urllib.parse.urlencode({
             'chs': '150x150',
             'cht': 'qr',
             'chl': value.encode('utf-8'),

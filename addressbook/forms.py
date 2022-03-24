@@ -64,6 +64,9 @@ class AddressForm(ModelForm):
             'city',
             'state',
             'zip',
+            'latitude',
+            'longitude',
+            'zoom',
             'type',
             'public_visible',
             'contact_visible'
@@ -99,5 +102,5 @@ ContactFormSet = formset_factory(ContactForm, max_num=4, formset=RequiredFormSet
 EmailEditFormSet = inlineformset_factory(Contact, Email, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
 PhoneEditFormSet = inlineformset_factory(Contact, PhoneNumber, extra=1, can_delete=True, fields="__all__")
 AddressEditFormSet = inlineformset_factory(Contact, Address, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
-WebsiteEditFormSet = inlineformset_factory(Contact, Website, extra=1, can_delete=True, fields="__all__")
+WebsiteEditFormSet = inlineformset_factory(Contact, Website, extra=1, formset=MandatoryInlineFormSet, fields="__all__")
 SocialNetworkEditFormSet = inlineformset_factory(Contact, SocialNetwork, extra=1, can_delete=True, fields="__all__")

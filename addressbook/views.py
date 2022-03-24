@@ -39,7 +39,14 @@ def add_contact(request):
         email_formset = EmailFormSet(request.POST, prefix="email")
         phone_formset = PhoneFormSet(request.POST, prefix="phone")
         address_formset = AddressFormSet(request.POST, prefix="address")
-        if contact_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and address_formset.is_valid():
+        website_formset = WebsiteFormSet(request.POST, prefix="website")
+        if (
+            contact_form.is_valid()
+            and email_formset.is_valid()
+            and phone_formset.is_valid()
+            and address_formset.is_valid()
+            and website_formset.is_valid()
+            ):
             contact = contact_form.save()
             for form in email_formset.forms:
                 email = form.save(commit=False)
@@ -53,6 +60,10 @@ def add_contact(request):
                 address = form.save(commit=False)
                 address.contact = contact
                 address.save()
+            for website in website_formset.forms:
+                website = form.save(commit=False)
+                website.contact = contact
+                website.save()
             # request.user.message_set.create(message = 'Successfully saved contact.')
             return HttpResponseRedirect(reverse('addressbook:index'))  # Redirect to a 'success' page
     else:
@@ -63,6 +74,7 @@ def add_contact(request):
         email_formset = EmailFormSet(prefix="email")
         phone_formset = PhoneFormSet(prefix="phone")
         address_formset = AddressFormSet(prefix="address")
+        website_formset = WebsiteFormSet(prefix="website")
     return render(
         request,
         'addressbook/add_contact.html',
@@ -71,6 +83,7 @@ def add_contact(request):
             'contact_form': contact_form,
             'email_formset': email_formset,
             'address_formset': address_formset,
+            'website_formset': website_formset,
         }
     )
 
@@ -85,22 +98,26 @@ def edit_contact(request, pk):
         phone_formset = PhoneEditFormSet(request.POST, instance=contact, prefix="phone")
         address_formset = AddressEditFormSet(request.POST, instance=contact, prefix="address")
         email_formset = EmailEditFormSet(request.POST, instance=contact, prefix="email")
+        website_formset = WebsiteEditFormSet(request.POST, instance=contact, prefix="website")
         if (
             contact_form.is_valid() and
             phone_formset.is_valid() and
             address_formset.is_valid() and
-            email_formset.is_valid()
+            email_formset.is_valid() and 
+            website_formset.is_valid()
         ):
             contact_form.save()
             email_formset.save()
             address_formset.save()
             phone_formset.save()
+            website_formset.save()
             return HttpResponseRedirect(reverse('addressbook:index'))
     else:
         contact_form = ContactForm(instance=contact, user=request.user)
         phone_formset = PhoneEditFormSet(instance=contact, prefix="phone")
         address_formset = AddressEditFormSet(instance=contact, prefix="address")
         email_formset = EmailEditFormSet(instance=contact, prefix="email")
+        website_formset = WebsiteEditFormSet(instance=contact, prefix="website")
     return render(
         request,
         'addressbook/edit_contact.html',
@@ -108,6 +125,7 @@ def edit_contact(request, pk):
             'email_formset': email_formset,
             'phone_formset': phone_formset,
             'address_formset': address_formset,
+            'website_formset': website_formset,
             'contact_form': contact_form,
             'contact': contact,
         }
@@ -133,10 +151,10 @@ def index(request):
         }
     )
 
-def get_hash(str):
-    str = str.lower().strip()
+def get_hash(string):
+    string = string.lower().strip().encode('utf-8')
     md5 = hashlib.md5()
-    md5.update(str)
+    md5.update(string)
     return md5.hexdigest()
 
 @login_required
@@ -159,6 +177,7 @@ def single_contact(request, pk):
         #if addresses:
         #    address = addresses[0]
         phones = PhoneNumber.objects.filter(contact=contact)
+        websites = Website.objects.filter(contact=contact)
         return render(
             request,
             'addressbook/single_contact.html',
@@ -168,6 +187,7 @@ def single_contact(request, pk):
                 'hash': email_hash,
                 'addresses': addresses,
                 'phones': phones,
+                'websites': websites,
                 'vcard_str': None,
                 #'vcard_str': str(VCard(contact)),
                 'groups': groups,

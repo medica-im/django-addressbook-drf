@@ -1,5 +1,5 @@
 Django>=4.0
-django-countries
+django-countries[pyuca]
 vobject
 django-crispy-forms
 django-taggit
