@@ -20,6 +20,7 @@ def boot_django():
             }
         },
         INSTALLED_APPS=(
+            "django.contrib.auth",
             "django.contrib.contenttypes",
             "addressbook",
             "easy_thumbnails",

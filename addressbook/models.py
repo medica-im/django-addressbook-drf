@@ -8,7 +8,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from easy_thumbnails.fields import ThumbnailerImageField
 from django_countries.fields import CountryField
 from taggit.managers import TaggableManager
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class AvatarStorage(LazyObject):
     def _setup(self):
@@ -44,7 +46,7 @@ class ContactGroup(models.Model):
 
 class Contact(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
+        User,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
