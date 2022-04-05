@@ -45,6 +45,16 @@ class ContactGroup(models.Model):
 
 
 class Contact(models.Model):
+    
+    class PersonType(models.TextChoices):
+        NATURAL = 'Natural', _('Natural person')
+        LEGAL = 'Legal', _('Legal person')
+
+    person_type = models.CharField(
+        max_length=255,
+        choices=PersonType.choices,
+        default=PersonType.NATURAL,
+    )
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -52,8 +62,9 @@ class Contact(models.Model):
         blank=True,
     )
     groups = models.ManyToManyField(ContactGroup)
-    last_name = models.CharField(max_length=255, blank=False)
-    first_name = models.CharField(max_length=255, blank=False)
+    formatted_name = models.CharField(max_length=255, blank=True)
+    last_name = models.CharField(max_length=255, blank=True)
+    first_name = models.CharField(max_length=255, blank=True)
     middle_name = models.CharField(max_length=255, blank=True)
     title = models.CharField(max_length=255, blank=True)
     organization = models.CharField(max_length=255, blank=True)
@@ -70,7 +81,7 @@ class Contact(models.Model):
     tags = TaggableManager(blank=True,)
 
     class Meta:
-        ordering = ['first_name', 'last_name']
+        ordering = ['formatted_name', 'last_name', 'first_name']
 
     def __init__(self, *args, **kwargs):
         super(Contact, self).__init__(*args, **kwargs)

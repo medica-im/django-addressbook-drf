@@ -31,6 +31,17 @@ class AddressInline(admin.StackedInline):
 
 class ContactAdmin(admin.ModelAdmin):
     #form = ContactForm
+    list_display = (
+        'formatted_name',
+        'last_name',
+        'first_name',
+        'middle_name',
+        'title',
+        'person_type',
+        'organization',
+        'user',
+        'profile_image',
+    )
 
     inlines = [
         AddressInline,
