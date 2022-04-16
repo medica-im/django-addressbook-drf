@@ -98,7 +98,11 @@ class Address(models.Model):
         HOME = 'Home', _('Home')
         WORK = 'Work', _('Work')
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name="addresses",
+    )
     street = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255, null=True, blank=True)
@@ -149,7 +153,11 @@ class PhoneNumber(models.Model):
         SKYPE = 'S', _('Skype')
         ANSWERING_SERVICE = 'AS', _('Answering service')
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name="phonenumbers"
+    )
     phone = models.CharField(max_length=255)
     type = models.CharField(max_length=255, choices=TelephoneType.choices)
     public_visible = models.BooleanField(default=False)
@@ -169,7 +177,11 @@ class Email(models.Model):
         PERSONAL = 'P', _('Personal')
         WORK = 'W', _('Work')
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name="emails",
+    )
     email = models.EmailField()
     type = models.CharField(max_length=255, choices=EmailType.choices)
     public_visible = models.BooleanField(default=False)
@@ -191,7 +203,11 @@ class Website(models.Model):
         PORTFOLIO = 'PO', _('Portfolio')
         BLOG = 'Blog', _('Blog')
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name="websites",
+    )
     website = models.URLField(blank=True)
     type = models.CharField(max_length=255, choices=WebsiteType.choices)
     public_visible = models.BooleanField(default=False)
@@ -210,7 +226,11 @@ class SocialNetwork(models.Model):
         FACEBOOK = 'F', 'Facebook'
         PINTEREST = 'P', 'Pinterest'
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE,
+        related_name="socialnetworks",
+    )
     handle = models.CharField(max_length=255)
     type = models.CharField(max_length=255, choices=SocialNetworkType.choices)
     public_visible = models.BooleanField(default=False)
