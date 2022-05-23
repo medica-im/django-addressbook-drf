@@ -42,7 +42,7 @@ class ContactAdmin(admin.ModelAdmin):
         'user',
         'profile_image',
     )
-
+    autocomplete_fields = ['user']
     inlines = [
         AddressInline,
         EmailInline,
