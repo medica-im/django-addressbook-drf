@@ -1,6 +1,6 @@
 import hashlib
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -13,7 +13,10 @@ from addressbook.models import *
 from addressbook.helper import VCard
 
 
-@login_required
+def superuser_check(user):
+    return user.is_superuser == True
+
+@user_passes_test(superuser_check)
 def add_group(request):
 
     if request.method == "GET":
@@ -31,7 +34,7 @@ def add_group(request):
         context = {'form': form}
     )
 
-@login_required
+@user_passes_test(superuser_check)
 def add_contact(request):
     if request.method == 'POST':  # If the form has been submitted...
         contact_form = ContactForm(request.POST, user=request.user)  # A form bound to the POST data
@@ -87,7 +90,7 @@ def add_contact(request):
         }
     )
 
-@login_required
+@user_passes_test(superuser_check)
 def edit_contact(request, pk):
     contact = Contact.objects.get(pk=pk)
     #if contact.group.user != request.user:
@@ -131,7 +134,7 @@ def edit_contact(request, pk):
         }
     )
 
-@login_required
+@user_passes_test(superuser_check)
 def index(request):
     groups = ContactGroup.objects.all()
     tags = Tag.objects.all()
@@ -157,7 +160,7 @@ def get_hash(string):
     md5.update(string)
     return md5.hexdigest()
 
-@login_required
+@user_passes_test(superuser_check)
 def single_contact(request, pk):
     groups = ContactGroup.objects.all()
     tags = Tag.objects.all()
@@ -202,7 +205,7 @@ def single_contact(request, pk):
     else:
         raise Http404
 
-@login_required
+@user_passes_test(superuser_check)
 def single_group(request, name):
     groups = ContactGroup.objects.filter(name=name)
     tags = Tag.objects.all()
@@ -221,7 +224,7 @@ def single_group(request, name):
         }
     )
 
-@login_required
+@user_passes_test(superuser_check)
 def single_tag(request, name):
     #FIXME: no groups! tags!
     groups = ContactGroup.objects.all()
@@ -241,7 +244,7 @@ def single_tag(request, name):
         }
     )
 
-@login_required
+@user_passes_test(superuser_check)
 def download_vcard(request, vcard=VCard):
     """
     View function for returning single vcard

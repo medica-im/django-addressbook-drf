@@ -89,7 +89,10 @@ class Contact(models.Model):
         self.profile_image.thumbnail_storage = avatar_storage
 
     def __str__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        if self.first_name and self.last_name:
+            return "%s %s %s" % (self.id, self.first_name, self.last_name)
+        else:
+            return "%s %s" % (self.id, self.formatted_name)
 
 
 class Address(models.Model):
