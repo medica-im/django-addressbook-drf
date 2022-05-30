@@ -11,7 +11,7 @@
     <div class="panel panel-success"></div>
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ contact.first_name }} {{ contact.last_name }}</h3>
+            <h3 class="panel-title">{{ contact.formatted_name }} {{ contact.first_name }} {{ contact.last_name }}</h3>
         </div>
         <div class="panel-body">
 	{% include "addressbook/hcard.html" %}
